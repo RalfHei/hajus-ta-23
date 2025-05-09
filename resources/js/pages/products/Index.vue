@@ -2,8 +2,8 @@
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { router } from '@inertiajs/vue3';
-import { ShoppingCart } from 'lucide-vue-next';
+import { Link, router } from '@inertiajs/vue3';
+import { ShoppingCart, Trash } from 'lucide-vue-next';
 
 const props = defineProps(['products']);
 
@@ -12,19 +12,26 @@ const addToCart = (product: any) => {
         preserveScroll: true,
     });
 };
+
+const clear = () => {
+    router.post(route('cart.clear'));
+};
+
 </script>
 <template>
     <AppLayout>
         <div class="p-12">
-            <div class="flex w-full items-center justify-end p-4">
-                <pre>  {{ $page.props.cart }}</pre>
-                <Button size="icon" variant="outline" class="relative">
+            <div class="flex w-full items-center justify-end gap-4 p-4">
+                <Button :as="Link" :href="route('cart.checkout')" size="icon" variant="outline" class="relative">
                     <ShoppingCart class="size-5" />
                     <div
                         class="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white"
                     >
-                        {{ Object.entries($page.props.cart ?? {})?.length }}
+                        {{ $page.props.cartCount }}
                     </div>
+                </Button>
+                <Button @click="clear" size="icon" variant="destructive" class="relative">
+                    <Trash class="size-5" />
                 </Button>
             </div>
             <div class="product-list flex flex-wrap gap-4">

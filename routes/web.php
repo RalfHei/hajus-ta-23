@@ -22,15 +22,17 @@ Route::post('/comment/{post}', [CommentController::class, 'store'])->middleware(
 
 Route::get('/products', [ProductController::class, 'index'])->middleware('auth')->name('products.index');
 
-
-
 Route::controller(CartController::class)
     ->middleware('auth')
     ->prefix('/cart')
     ->name('cart.')
     ->group(function () {
         Route::post('/add/{product}', 'add')->name('add');
+        Route::get('/', 'view')->name('checkout');
+        Route::post('/clear', 'clear')->name('clear');
+        Route::post('/update', 'update')->name('update');
     });
+
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
