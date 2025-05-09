@@ -1,0 +1,45 @@
+<script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
+import Card from '@/components/ui/card/Card.vue';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { router } from '@inertiajs/vue3';
+import { ShoppingCart } from 'lucide-vue-next';
+
+const props = defineProps(['products']);
+
+const addToCart = (product: any) => {
+    router.post(route('cart.add', product), undefined, {
+        preserveScroll: true,
+    });
+};
+</script>
+<template>
+    <AppLayout>
+        <div class="p-12">
+            <div class="flex w-full items-center justify-end p-4">
+                <pre>  {{ $page.props.cart }}</pre>
+                <Button size="icon" variant="outline" class="relative">
+                    <ShoppingCart class="size-5" />
+                    <div
+                        class="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white"
+                    >
+                        {{ Object.entries($page.props.cart ?? {})?.length }}
+                    </div>
+                </Button>
+            </div>
+            <div class="product-list flex flex-wrap gap-4">
+                <Card v-for="product in products" :key="product.id" class="product-item flex w-80 flex-col p-4">
+                    <div class="size-72 object-contain">
+                        <img :src="product.image" :alt="product.name" />
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="mb-2 mt-4 text-lg font-semibold text-gray-100">{{ product.name }}</h2>
+                        <p class="mb-4 text-gray-200">{{ product.description }}</p>
+                        <p class="font-bold text-gray-400">Price: ${{ product.price }}</p>
+                    </div>
+                    <Button class="mt-2 w-full" @click="addToCart(product)">Add to cart</Button>
+                </Card>
+            </div>
+        </div>
+    </AppLayout>
+</template>
